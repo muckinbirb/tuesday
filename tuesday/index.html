@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Choose Your Own Day</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Special+Elite&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Title Screen -->
+  <div id="title-screen" class="screen active">
+    <div class="title-content">
+      <h1 class="title-heading">Choose Your Own Day</h1>
+      <div class="title-buttons">
+        <button id="btn-new-game" class="choice-btn">Begin</button>
+        <button id="btn-continue" class="choice-btn hidden">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Screen -->
+  <div id="game-screen" class="screen">
+
+    <!-- Page display -->
+    <div id="page-container">
+      <div id="image-area">
+        <!-- single layout: one <img> -->
+        <!-- spread layout: two <img> side by side -->
+      </div>
+      <div id="text-area" class="hidden">
+        <p id="page-text"></p>
+      </div>
+    </div>
+
+    <!-- Choices -->
+    <div id="choices-area"></div>
+
+    <!-- UI controls -->
+    <div id="ui-controls">
+      <button id="btn-mute" aria-label="Toggle sound">♪</button>
+    </div>
+
+  </div>
+
+  <!-- End Screen -->
+  <div id="end-screen" class="screen">
+    <div class="end-content">
+      <h2>The End</h2>
+      <button id="btn-replay" class="choice-btn">Play Again</button>
+    </div>
+  </div>
+
+  <script src="js/story.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/engine.js"></script>
+</body>
+</html>

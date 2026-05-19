@@ -1,0 +1,254 @@
+/* ── Reset & base ───────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Lora', Georgia, serif;
+}
+
+body {
+  background-color: #f5f0e8;
+  background-image: url('../assets/paper.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+/* ── Screens ────────────────────────────────────────────────── */
+.screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.screen.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ── Title screen ───────────────────────────────────────────── */
+.title-content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.5rem;
+  padding: 2rem;
+}
+
+.title-heading {
+  font-family: 'Special Elite', cursive;
+  font-size: clamp(2rem, 6vw, 4rem);
+  color: #2c1a0e;
+  letter-spacing: 0.05em;
+  text-shadow: 1px 2px 0 rgba(0,0,0,0.12);
+}
+
+.title-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 280px;
+}
+
+/* ── Game screen ────────────────────────────────────────────── */
+#game-screen {
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* ── Page container ─────────────────────────────────────────── */
+#page-container {
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  min-height: 0;
+  padding: 1rem 1rem 0;
+}
+
+/* ── Image area ─────────────────────────────────────────────── */
+#image-area {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 0.75rem;
+  flex: 1;
+  min-height: 0;
+}
+
+#image-area img {
+  display: block;
+  max-height: 100%;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 2px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+}
+
+/* single: one centered image */
+#image-area.layout-single img {
+  max-height: 58vh;
+}
+
+/* spread: two images side by side */
+#image-area.layout-spread img {
+  max-height: 58vh;
+  flex: 1;
+  min-width: 0;
+  max-width: 50%;
+}
+
+@media (max-width: 700px) {
+  #image-area.layout-spread {
+    flex-direction: column;
+    align-items: center;
+  }
+  #image-area.layout-spread img {
+    max-width: 100%;
+    max-height: 36vh;
+  }
+  #image-area.layout-single img {
+    max-height: 46vh;
+  }
+}
+
+/* ── Text area ──────────────────────────────────────────────── */
+#text-area {
+  width: 100%;
+  max-width: 680px;
+  margin-top: 0.75rem;
+  padding: 0.75rem 1.25rem;
+  background: rgba(245, 240, 232, 0.88);
+  border: 1px solid rgba(44, 26, 14, 0.18);
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+#text-area.hidden { display: none; }
+
+#page-text {
+  font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+  line-height: 1.7;
+  color: #2c1a0e;
+  min-height: 1.7em;
+}
+
+/* ── Choices ────────────────────────────────────────────────── */
+#choices-area {
+  width: 100%;
+  max-width: 680px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem 1rem;
+  flex-shrink: 0;
+}
+
+/* ── Choice button ──────────────────────────────────────────── */
+.choice-btn {
+  width: 100%;
+  padding: 0.7rem 1.2rem;
+  background: #faf6ee;
+  border: 1.5px solid #8b6340;
+  border-radius: 3px;
+  font-family: 'Lora', Georgia, serif;
+  font-size: clamp(0.9rem, 2vw, 1rem);
+  color: #2c1a0e;
+  cursor: pointer;
+  text-align: left;
+  box-shadow: 1px 2px 6px rgba(0,0,0,0.10);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  /* hidden by default; engine adds .visible */
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.choice-btn.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s ease, transform 0.3s ease,
+              background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.choice-btn:hover,
+.choice-btn:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 2px 4px 10px rgba(0,0,0,0.15);
+  background: #fff;
+  outline: none;
+}
+
+.choice-btn:active {
+  transform: translateY(0);
+  box-shadow: 1px 2px 4px rgba(0,0,0,0.12);
+}
+
+/* title screen buttons don't start hidden */
+.title-buttons .choice-btn,
+.end-content .choice-btn {
+  opacity: 1;
+  transform: none;
+  text-align: center;
+}
+
+/* ── End screen ─────────────────────────────────────────────── */
+.end-content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.end-content h2 {
+  font-family: 'Special Elite', cursive;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  color: #2c1a0e;
+}
+
+.end-content .choice-btn {
+  max-width: 200px;
+}
+
+/* ── UI controls ────────────────────────────────────────────── */
+#ui-controls {
+  position: fixed;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 10;
+}
+
+#btn-mute {
+  background: rgba(245, 240, 232, 0.8);
+  border: 1px solid rgba(44,26,14,0.2);
+  border-radius: 50%;
+  width: 2.2rem;
+  height: 2.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+#btn-mute:hover { background: #fff; }
+#btn-mute.muted { opacity: 0.45; }
+
+/* ── Utility ────────────────────────────────────────────────── */
+.hidden { display: none !important; }
