@@ -1,61 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
   <title>Choose Your Own Day</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Special+Elite&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div id="stage">
+    <img id="spread" alt="">
+    <div id="text-layer"></div>
+    <div id="hotspots"></div>
+  </div>
+  <nav id="nav-ui">
+    <div id="nav-left">
+      <button id="btn-back" class="nav-btn" aria-label="Back">
+        <img src="_images/Global-Back1.png" alt="">
+      </button>
+      <button id="btn-menu" class="nav-btn" aria-label="Menu">
+        <img src="_images/Global-Menu1.png" alt="">
+      </button>
+    </div>
+    <button id="btn-die" class="nav-btn" aria-label="Randomize color">
+      <img src="_images/Global-ColorDie1.png" alt="">
+    </button>
+  </nav>
 
-  <!-- Title Screen -->
-  <div id="title-screen" class="screen active">
-    <div class="title-content">
-      <h1 class="title-heading">Choose Your Own Day</h1>
-      <div class="title-buttons">
-        <button id="btn-new-game" class="choice-btn">Begin</button>
-        <button id="btn-continue" class="choice-btn hidden">Continue</button>
+  <div id="menu-overlay">
+    <div id="menu-card">
+      <img src="_images/Menu-scrap.png" id="menu-scrap-bg">
+      <div id="menu-items">
+        <button id="btn-about-project" class="nav-btn menu-item-btn" aria-label="About the project">
+          <img src="_images/Menu-AboutProject1.png" alt="">
+        </button>
+        <button id="btn-about-ann" class="nav-btn menu-item-btn" aria-label="About Ann">
+          <img src="_images/Menu-AboutAnn1.png" alt="">
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- Game Screen -->
-  <div id="game-screen" class="screen">
-
-    <!-- Page display -->
-    <div id="page-container">
-      <div id="image-area">
-        <!-- single layout: one <img> -->
-        <!-- spread layout: two <img> side by side -->
+  <div id="small-screen-overlay">
+    <div id="small-screen-message">
+      <img src="_images/Error-receipt.png" id="small-screen-bg">
+      <div id="small-screen-content">
+        <h2 id="small-screen-header"></h2>
+        <p id="small-screen-text"></p>
       </div>
-      <div id="text-area" class="hidden">
-        <p id="page-text"></p>
-      </div>
-    </div>
-
-    <!-- Choices -->
-    <div id="choices-area"></div>
-
-    <!-- UI controls -->
-    <div id="ui-controls">
-      <button id="btn-mute" aria-label="Toggle sound">♪</button>
-    </div>
-
-  </div>
-
-  <!-- End Screen -->
-  <div id="end-screen" class="screen">
-    <div class="end-content">
-      <h2>The End</h2>
-      <button id="btn-replay" class="choice-btn">Play Again</button>
     </div>
   </div>
 
-  <script src="js/story.js"></script>
-  <script src="js/audio.js"></script>
-  <script src="js/engine.js"></script>
+  <div id="coord-ui">
+    <div id="spread-width"></div>
+    <div id="coords"></div>
+    <button id="coord-toggle">📍 coords: on</button>
+  </div>
+  <script src="story.js"></script>
+  <script src="engine.js"></script>
 </body>
 </html>

@@ -18,7 +18,9 @@ if [[ ! -f "$PSD_PATH" ]]; then
     exit 1
 fi
 
-# Don't wipe the log — the JSX recreates it and resume skips existing PNGs
+# Delete stale log so polling does not find an old "Done." from a previous run.
+# Resume still works — the JSX checks whether each PNG file exists, not the log.
+rm -f "$LOG_PATH"
 
 escape_js() { printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g'; }
 JS_PSD="$(escape_js "$PSD_PATH")"
