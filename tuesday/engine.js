@@ -9,6 +9,8 @@ const smallScreenOverlay  = document.getElementById('small-screen-overlay');
 const smallScreenHeader   = document.getElementById('small-screen-header');
 const smallScreenText     = document.getElementById('small-screen-text');
 const smallScreenContent  = document.getElementById('small-screen-content');
+const splashOverlay    = document.getElementById('splash-overlay');
+const btnBack          = document.getElementById('btn-back');
 
 const SMALL_SCREEN_HEADER  = "oops, too small :-(";
 const SMALL_SCREEN_MESSAGE = "this experience works best on desktop. please come back on a larger screen!";
@@ -75,7 +77,7 @@ function addHoverSwap(btn, src1, src2) {
 addHoverSwap(document.getElementById('btn-about-project'), '_images/Menu-AboutProject1.png', '_images/Menu-AboutProject2.png');
 addHoverSwap(document.getElementById('btn-about-ann'),     '_images/Menu-AboutAnn1.png',     '_images/Menu-AboutAnn2.png');
 
-document.getElementById('btn-back').addEventListener('click', goBack);
+btnBack.addEventListener('click', goBack);
 
 const menuOverlay = document.getElementById('menu-overlay');
 
@@ -101,6 +103,7 @@ new ResizeObserver(() => {
   const w = spread.clientWidth;
   document.documentElement.style.setProperty('--font-scale', (w / 1000).toFixed(4));
   spreadWidthDisplay.textContent = `spread: ${w}px`;
+  if (!currentPage || currentPage === 'splash') return;
   if (w < BREAKPOINT && !overlayShown) showSmallScreenOverlay();
   if (w >= BREAKPOINT && overlayShown) hideSmallScreenOverlay();
 }).observe(spread);
@@ -167,9 +170,11 @@ function triggerOverlay(ov) {
   img.className = `overlay ${ov.jitter || ''}`.trim();
   img.src = ov.src;
   stage.insertBefore(img, hotspots);
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    img.style.opacity = '1';
-  }));
+  if (!img.className.includes('twinkle') && !img.className.includes('z-seq') && !img.classList.contains('beep')) {
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      img.style.opacity = '1';
+    }));
+  }
 }
 
 function fireOverlays(trigger, index) {
@@ -303,6 +308,29 @@ function typePolygonBubble(b, onDone) {
   typeAcrossSlots(slotEls, lines, 0, onDone);
 }
 
+// ── Splash screen ─────────────────────────────────────────────
+function showSplash() {
+  splashOverlay.classList.remove('hidden');
+  updateBackBtn();
+}
+
+function hideSplash() {
+  splashOverlay.classList.add('hidden');
+}
+
+function updateBackBtn() {
+  if (pageHistory.length > 0) {
+    btnBack.classList.add('visible');
+  } else {
+    btnBack.classList.remove('visible');
+  }
+}
+
+document.getElementById('btn-start').addEventListener('click', () => {
+  hideSplash();
+  renderPage('spread_01', false);
+});
+
 // ── Page rendering ────────────────────────────────────────────
 function goBack() {
   if (pageHistory.length === 0) return;
@@ -310,8 +338,23 @@ function goBack() {
 }
 
 function renderPage(pageId, pushHistory = true) {
+  if (pageId === 'splash') {
+    if (pushHistory && currentPage) pageHistory.push(currentPage);
+    currentPage = 'splash';
+    textLayer.innerHTML = '';
+    hotspots.innerHTML = '';
+    stage.querySelectorAll('.wdyd-img, .overlay').forEach(el => el.remove());
+    if (typeTimer) clearInterval(typeTimer);
+    showSplash();
+    return;
+  }
+
+  hideSplash();
+
   if (pushHistory && currentPage) pageHistory.push(currentPage);
   currentPage = pageId;
+  updateBackBtn();
+
   const page = story.pages[pageId];
   if (!page) return;
 
@@ -418,6 +461,21 @@ function showChoices(choices) {
       btn.appendChild(label);
 
       btn.addEventListener('click', () => renderPage(choice.next, true));
+
+      const cx = (parseFloat(choice.left) + parseFloat(choice.width) / 2).toFixed(1) + '%';
+      const cy = (parseFloat(choice.top)  + parseFloat(choice.height) / 2).toFixed(1) + '%';
+      // btn.addEventListener('mouseenter', () => {
+      //   stage.querySelectorAll('.overlay.option-art').forEach(ov => {
+      //     ov.style.transformOrigin = `${cx} ${cy}`;
+      //     ov.style.scale = '1.1';
+      //   });
+      // });
+      // btn.addEventListener('mouseleave', () => {
+      //   stage.querySelectorAll('.overlay.option-art').forEach(ov => {
+      //     ov.style.scale = '';
+      //   });
+      // });
+
       hotspots.appendChild(btn);
 
       setTimeout(() => { btn.style.opacity = '1'; }, i * 150);

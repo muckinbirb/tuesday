@@ -110,6 +110,54 @@ body {
 }
 .overlay.jitter-eek { animation: eek-flash 3s linear infinite, jitter-c 0.13s linear infinite; }
 
+/* Beep: flashes on 4 times then stays visible */
+@keyframes beep {
+  0%    { opacity: 0; }
+  12.5% { opacity: 1; }
+  25%   { opacity: 0; }
+  37.5% { opacity: 1; }
+  50%   { opacity: 0; }
+  62.5% { opacity: 1; }
+  75%   { opacity: 0; }
+  87.5% { opacity: 1; }
+  100%  { opacity: 1; }
+}
+.overlay.beep { animation: beep 1.6s steps(1) forwards; }
+
+/* Z sequential: one z visible at a time, 0.5s each, 2.5s total cycle */
+@keyframes z-seq-1 { 0% { opacity: 1; } 100% { opacity: 1; } }
+@keyframes z-seq-2 { 0% { opacity: 0; } 20% { opacity: 1; } 100% { opacity: 1; } }
+@keyframes z-seq-3 { 0% { opacity: 0; } 40% { opacity: 1; } 100% { opacity: 1; } }
+@keyframes z-seq-4 { 0% { opacity: 0; } 60% { opacity: 1; } 100% { opacity: 1; } }
+@keyframes z-seq-5 { 0% { opacity: 0; } 80% { opacity: 1; } 100% { opacity: 1; } }
+.overlay.z-seq-1 { animation: z-seq-1 2.5s steps(1) infinite; }
+.overlay.z-seq-2 { animation: z-seq-2 2.5s steps(1) infinite; }
+.overlay.z-seq-3 { animation: z-seq-3 2.5s steps(1) infinite; }
+.overlay.z-seq-4 { animation: z-seq-4 2.5s steps(1) infinite; }
+.overlay.z-seq-5 { animation: z-seq-5 2.5s steps(1) infinite; }
+
+/* Sparkle cycling: 1→1+2→2→2+3→3→1+3→repeat (3s period, 0.5s per state) */
+@keyframes twinkle-a {
+  0%   { opacity: 1; }
+  33%  { opacity: 0; }
+  83%  { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes twinkle-b {
+  0%   { opacity: 0; }
+  17%  { opacity: 1; }
+  67%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes twinkle-c {
+  0%   { opacity: 0; }
+  50%  { opacity: 1; }
+  100% { opacity: 1; }
+}
+.overlay.twinkle-a { animation: twinkle-a 1.5s steps(1) infinite; }
+.overlay.twinkle-b { animation: twinkle-b 1.5s steps(1) infinite; }
+.overlay.twinkle-c { animation: twinkle-c 1.5s steps(1) infinite; }
+
 @keyframes vibes-pulse {
   0%  { transform: scale(1.000); animation-timing-function: step-end; }
   20% { transform: scale(1.025); animation-timing-function: step-end; }
@@ -123,7 +171,7 @@ body {
   z-index: 1;
 }
 .overlay.bubble-art  { z-index: 2; }
-.overlay.option-art  { z-index: 3; }
+.overlay.option-art  { z-index: 3; transition: scale 0.15s ease; }
 
 /* ── Choice hotspots ─────────────────────────────────────────── */
 #hotspots { position: absolute; inset: 0; z-index: 11; pointer-events: none; }
@@ -137,9 +185,11 @@ body {
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity 0.4s ease;
-  /* outline: 2px dashed red; */
+  transition: opacity 0.4s ease, scale 0.15s ease;
+  pointer-events: auto;
 }
+
+/* .hotspot:hover { scale: 1.1; } */
 
 .choice-label {
   font-family: 'Times New Roman', Times, serif;
@@ -163,6 +213,46 @@ body {
 .crosshair-h { left: 0; width: 100%; height: 1px; }
 .crosshair-v { top: 0;  height: 100%; width: 1px; }
 
+/* ── Splash screen ───────────────────────────────────────────── */
+#splash-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+  z-index: 300;
+  pointer-events: none;
+}
+
+#splash-title,
+#btn-start { pointer-events: auto; }
+
+#splash-overlay.hidden { display: none; }
+
+#splash-title {
+  font-family: 'Akzidenz Grotesk', 'AkzidenzGrotesk', Arial, sans-serif;
+  font-size: 48pt;
+  font-weight: normal;
+  color: #1a1a1a;
+  letter-spacing: -0.06em;
+  animation: wdyd-wiggle 1s steps(1) infinite;
+}
+
+#btn-start {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 10pt;
+  letter-spacing: -0.01em;
+  color: #1a1a1a;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+#btn-start:hover { scale: 1.1; }
+
 /* ── Navigation buttons ──────────────────────────────────────── */
 #nav-ui {
   position: fixed;
@@ -182,6 +272,9 @@ body {
 }
 
 #nav-left .nav-btn { pointer-events: auto; }
+
+#btn-back { display: none; }
+#btn-back.visible { display: block; }
 
 #btn-die { position: absolute; top: 1rem; right: 1rem; }
 
