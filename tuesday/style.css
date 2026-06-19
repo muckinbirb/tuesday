@@ -23,6 +23,7 @@ body {
   display: inline-block;
   mix-blend-mode: multiply;
   overflow: hidden;
+  transition: opacity 0.35s ease;
 }
 
 #spread {
@@ -37,7 +38,7 @@ body {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: 10;
+  transform: translateZ(0);
 }
 
 .bubble-text {
@@ -82,11 +83,11 @@ body {
   100%  { transform: translate( 0px,  0px); }
 }
 @keyframes jitter-c {
-  0%   { transform: translate( 0px,   -0.5px); }
-  25%  { transform: translate( 0px,    0.5px); }
-  50%  { transform: translate(-0.5px,  0px);   }
-  75%  { transform: translate( 0.5px,  0px);   }
-  100% { transform: translate( 0px,   -0.5px); }
+  0%   { transform: translate( 0px,  -1px); }
+  25%  { transform: translate( 0px,   1px); }
+  50%  { transform: translate(-1px,   0px); }
+  75%  { transform: translate( 1px,   0px); }
+  100% { transform: translate( 0px,  -1px); }
 }
 
 .overlay {
@@ -108,7 +109,7 @@ body {
   8.33%  { opacity: 0; animation-timing-function: step-end; }
   16.67%, 100% { opacity: 1; }
 }
-.overlay.jitter-eek { animation: eek-flash 3s linear infinite, jitter-c 0.13s linear infinite; }
+.overlay.jitter-eek { animation: eek-flash 3s linear 3s infinite backwards, jitter-c 0.13s linear infinite; }
 
 /* Beep: flashes on 4 times then stays visible */
 @keyframes beep {
@@ -189,7 +190,11 @@ body {
   pointer-events: auto;
 }
 
-/* .hotspot:hover { scale: 1.1; } */
+.hotspot:hover { scale: 1.1; }
+
+.overlay.choice-overlay {
+  transition: opacity 0.1s ease, scale 0.15s ease;
+}
 
 .choice-label {
   font-family: 'Times New Roman', Times, serif;
@@ -221,13 +226,14 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2.5rem;
-  z-index: 300;
+  gap: 1rem;
   pointer-events: none;
+  mix-blend-mode: multiply;
 }
 
 #splash-title,
-#btn-start { pointer-events: auto; }
+#btn-start,
+#btn-continue { pointer-events: auto; }
 
 #splash-overlay.hidden { display: none; }
 
@@ -240,25 +246,45 @@ body {
   animation: wdyd-wiggle 1s steps(1) infinite;
 }
 
-#btn-start {
-  font-family: 'Times New Roman', Times, serif;
-  font-size: 10pt;
-  letter-spacing: -0.01em;
-  color: #1a1a1a;
+#splash-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 50px;
+}
+
+.splash-btn {
+  position: relative;
   background: none;
   border: none;
   cursor: pointer;
   padding: 0;
+  width: 150px;
+  transition: transform 0.1s ease;
 }
+.splash-btn:hover { transform: scale(1.05); }
+.splash-btn img { display: block; width: 100%; }
 
-#btn-start:hover { scale: 1.1; }
+.splash-btn-label {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 10pt;
+  letter-spacing: -0.01em;
+  color: #1a1a1a;
+  pointer-events: none;
+  white-space: nowrap;
+}
+#btn-start   .splash-btn-label { top: 38%; }
+#btn-continue .splash-btn-label { top: 34%; }
 
 /* ── Navigation buttons ──────────────────────────────────────── */
 #nav-ui {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 150;
+  z-index: 10;
 }
 
 #nav-left {
@@ -306,10 +332,20 @@ body {
   display: none;
   align-items: center;
   justify-content: center;
-  z-index: 100;
+  z-index: 20;
 }
 
 #menu-overlay.visible { display: flex; }
+
+#btn-close-menu {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  display: none;
+  pointer-events: auto;
+}
+
+#menu-overlay.visible #btn-close-menu { display: block; }
 
 #menu-card {
   position: relative;
@@ -318,9 +354,8 @@ body {
 
 #menu-scrap-bg {
   display: block;
-  max-height: 60vh;
-  max-width: 60vw;
-  width: auto;
+  width: 480px;
+  max-width: 85vw;
   height: auto;
 }
 
@@ -328,19 +363,155 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) rotate(-2deg);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.25rem;
-  width: 65%;
-  mix-blend-mode: multiply;
+  gap: 1rem;
+  width: 75%;
+  padding: 0 0.75rem;
+  box-sizing: border-box;
 }
 
-.menu-item-btn img {
+#menu-main-title {
+  font-family: 'Akzidenz Grotesk', 'AkzidenzGrotesk', Arial, sans-serif;
+  font-size: 32pt;
+  font-weight: normal;
+  color: #1a1a1a;
+  letter-spacing: -0.06em;
+  margin: 0;
+  text-align: center;
+}
+
+.menu-section-title {
+  font-family: 'Akzidenz Grotesk', 'AkzidenzGrotesk', Arial, sans-serif;
+  font-size: 20pt;
+  font-weight: normal;
+  color: #1a1a1a;
+  letter-spacing: -0.06em;
+  margin: 0;
+  text-align: center;
+}
+
+#special-thanks-block {
+  position: relative;
   width: 100%;
+}
+
+
+#sax-img {
+  position: absolute;
+  height: 80px;
+  width: auto;
+  display: none;
+  top: 0;
+  right: -55px;
+  z-index: 0;
+}
+
+#thanks-text {
+  position: relative;
+  z-index: 1;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 10pt;
+  letter-spacing: -0.01em;
+  color: #1a1a1a;
+  margin: 0;
+  text-align: left;
+}
+
+#about-text {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 10pt;
+  letter-spacing: -0.01em;
+  color: #1a1a1a;
+  margin: 0;
+  text-align: left;
+  padding: 0 0.5rem;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+#menu-toggles {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.menu-toggle-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.menu-toggle-btn img {
+  display: block;
+  width: 72px;
+  height: auto;
+  transform-origin: center;
+  transition: transform 0.15s ease;
+}
+
+.menu-toggle-btn:hover img { transform: scale(1.25); }
+
+#btn-sfx img { width: 72px; }
+
+.menu-toggle-label {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 10pt;
+  letter-spacing: -0.01em;
+  color: #1a1a1a;
+  text-align: center;
+}
+
+#menu-about-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-about-btn {
+  position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.15s ease;
+}
+
+.menu-about-btn:hover { transform: scale(1.1); }
+
+.menu-about-btn img {
+  display: block;
+  width: 120px;
   height: auto;
 }
+
+.menu-about-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 10pt;
+  letter-spacing: -0.01em;
+  color: #1a1a1a;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.menu-about-btn:hover .menu-about-label { opacity: 1; }
 
 /* ── Small screen overlay ────────────────────────────────────── */
 #small-screen-overlay {
@@ -350,10 +521,12 @@ body {
   display: none;
   align-items: center;
   justify-content: center;
-  z-index: 200;
+  z-index: 30;
 }
 
-#stage.blurred {
+#stage.blurred,
+#btn-die.blurred,
+#splash-overlay.blurred {
   filter: blur(8px);
 }
 

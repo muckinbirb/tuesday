@@ -4,6 +4,7 @@ const textLayer        = document.getElementById('text-layer');
 const hotspots         = document.getElementById('hotspots');
 const coords           = document.getElementById('coords');
 const coordToggle      = document.getElementById('coord-toggle');
+const spreadIdDisplay     = document.getElementById('spread-id');
 const spreadWidthDisplay  = document.getElementById('spread-width');
 const smallScreenOverlay  = document.getElementById('small-screen-overlay');
 const smallScreenHeader   = document.getElementById('small-screen-header');
@@ -11,6 +12,7 @@ const smallScreenText     = document.getElementById('small-screen-text');
 const smallScreenContent  = document.getElementById('small-screen-content');
 const splashOverlay    = document.getElementById('splash-overlay');
 const btnBack          = document.getElementById('btn-back');
+const btnContinue      = document.getElementById('btn-continue');
 
 const SMALL_SCREEN_HEADER  = "oops, too small :-(";
 const SMALL_SCREEN_MESSAGE = "this experience works best on desktop. please come back on a larger screen!";
@@ -68,30 +70,151 @@ function addHoverAnim(btn, src1, src2) {
 addHoverAnim(document.getElementById('btn-back'), '_images/Global-Back1.png',     '_images/Global-Back2.png');
 addHoverAnim(document.getElementById('btn-die'),  '_images/Global-ColorDie1.png', '_images/Global-ColorDie2.png');
 addHoverAnim(document.getElementById('btn-menu'), '_images/Global-Menu1.png',     '_images/Global-Menu2.png');
+
+let dieRollCount = 0;
+document.getElementById('btn-die').addEventListener('click', () => {
+  dieRollCount++;
+  const h = Math.floor(Math.random() * 360);
+  const s = Math.floor(Math.random() * 41) + 40; // 40–80%
+  const isLight = dieRollCount % 3 === 0;
+  const l = isLight
+    ? Math.floor(Math.random() * 21) + 70  // 70–90% (black-legible)
+    : Math.floor(Math.random() * 41) + 25; // 25–65% (not black, not necessarily light)
+  document.body.style.backgroundColor = `hsl(${h}, ${s}%, ${l}%)`;
+});
 function addHoverSwap(btn, src1, src2) {
   const img = btn.querySelector('img');
   btn.addEventListener('mouseenter', () => { img.src = src2; });
   btn.addEventListener('mouseleave', () => { img.src = src1; });
 }
 
-addHoverSwap(document.getElementById('btn-about-project'), '_images/Menu-AboutProject1.png', '_images/Menu-AboutProject2.png');
-addHoverSwap(document.getElementById('btn-about-ann'),     '_images/Menu-AboutAnn1.png',     '_images/Menu-AboutAnn2.png');
+function addBubbleHover(btn, srcA, srcB) {
+  const img = btn.querySelector('img');
+  let timer = null, state = 0;
+  btn.addEventListener('mouseenter', () => {
+    state = 0;
+    timer = setInterval(() => {
+      state = 1 - state;
+      img.src = state === 0 ? srcA : srcB;
+    }, 200);
+  });
+  btn.addEventListener('mouseleave', () => {
+    clearInterval(timer);
+    timer = null;
+    state = 0;
+    img.src = srcA;
+  });
+}
+
+addBubbleHover(document.getElementById('btn-start'), '_images/Splash_StartBubble-a.png', '_images/Splash_StartBubble-b.png');
+addBubbleHover(btnContinue,                          '_images/Splash_ContBubble-a.png',  '_images/Splash_ContBubble-b.png');
+
+const bgMusic = document.getElementById('bg-music');
+
+let musicOn = true;
+let sfxOn   = true;
+
+const btnMusic   = document.getElementById('btn-music');
+const btnSfx     = document.getElementById('btn-sfx');
+const btnRestart = document.getElementById('btn-restart');
+
+function addToggleHover(btn, src1on, src2on, src1off, src2off, getState) {
+  const img = btn.querySelector('img');
+  let timer = null, frame = 0;
+  btn.addEventListener('mouseenter', () => {
+    frame = 0;
+    timer = setInterval(() => {
+      frame = 1 - frame;
+      const [a, b] = getState() ? [src1on, src2on] : [src1off, src2off];
+      img.src = frame === 0 ? a : b;
+    }, 200);
+  });
+  btn.addEventListener('mouseleave', () => {
+    clearInterval(timer);
+    timer = null;
+    img.src = getState() ? src1on : src1off;
+  });
+}
+
+addToggleHover(btnMusic,
+  '_images/Menu-Music-On1.png', '_images/Menu-Music-On2.png',
+  '_images/Menu-Music-Off1.png', '_images/Menu-Music-Off2.png',
+  () => musicOn
+);
+
+addToggleHover(btnSfx,
+  '_images/Menu-SFX-On1.png', '_images/Menu-SFX-On2.png',
+  '_images/Menu-SFX-Off1.png', '_images/Menu-SFX-Off2.png',
+  () => sfxOn
+);
+
+addHoverAnim(btnRestart, '_images/Menu-Restart1.png', '_images/Menu-Restart2.png');
+
+btnMusic.addEventListener('click', () => {
+  musicOn = !musicOn;
+  btnMusic.querySelector('img').src = musicOn ? '_images/Menu-Music-On1.png' : '_images/Menu-Music-Off1.png';
+  if (musicOn) bgMusic.play(); else bgMusic.pause();
+});
+
+btnSfx.addEventListener('click', () => {
+  sfxOn = !sfxOn;
+  btnSfx.querySelector('img').src = sfxOn ? '_images/Menu-SFX-On1.png' : '_images/Menu-SFX-Off1.png';
+});
+
+btnRestart.addEventListener('click', () => {
+  closeMenu();
+  pageHistory.length = 0;
+  renderPage('splash', false);
+});
 
 btnBack.addEventListener('click', goBack);
 
-const menuOverlay = document.getElementById('menu-overlay');
+const menuOverlay   = document.getElementById('menu-overlay');
+const btnMenu       = document.getElementById('btn-menu');
+const btnCloseMenu  = document.getElementById('btn-close-menu');
+
+addHoverAnim(btnCloseMenu, '_images/Global-Close1.png', '_images/Global-Close2.png');
+btnCloseMenu.addEventListener('click', closeMenu);
+
+const saxImg             = document.getElementById('sax-img');
+const specialThanksBlock = document.getElementById('special-thanks-block');
+let saxTimer = null, saxFrame = 0;
+
+specialThanksBlock.addEventListener('mouseenter', () => {
+  saxImg.style.display = 'block';
+  saxFrame = 0;
+  saxTimer = setInterval(() => {
+    saxFrame = 1 - saxFrame;
+    saxImg.src = saxFrame === 0 ? '_images/Menu-Sax1.png' : '_images/Menu-Sax2.png';
+  }, 200);
+});
+
+specialThanksBlock.addEventListener('mouseleave', () => {
+  clearInterval(saxTimer);
+  saxTimer = null;
+  saxImg.style.display = 'none';
+  saxImg.src = '_images/Menu-Sax1.png';
+});
+
+const btnDie = document.getElementById('btn-die');
 
 function openMenu() {
   menuOverlay.classList.add('visible');
   stage.classList.add('blurred');
+  splashOverlay.classList.add('blurred');
+  btnDie.classList.add('blurred');
+  btnMenu.style.visibility = 'hidden';
 }
 
 function closeMenu() {
   menuOverlay.classList.remove('visible');
   stage.classList.remove('blurred');
+  splashOverlay.classList.remove('blurred');
+  btnDie.classList.remove('blurred');
+  btnMenu.style.visibility = '';
 }
 
-document.getElementById('btn-menu').addEventListener('click', () => {
+btnMenu.addEventListener('click', () => {
   menuOverlay.classList.contains('visible') ? closeMenu() : openMenu();
 });
 
@@ -159,6 +282,9 @@ spread.addEventListener('click', e => {
 });
 
 setCoords(true);
+
+const FADE_MS      = 350;
+const POST_FADE_MS = 500;
 
 let typeTimer = null;
 let pageOverlays = [];
@@ -311,11 +437,13 @@ function typePolygonBubble(b, onDone) {
 // ── Splash screen ─────────────────────────────────────────────
 function showSplash() {
   splashOverlay.classList.remove('hidden');
+  stage.style.visibility = 'hidden';
   updateBackBtn();
 }
 
 function hideSplash() {
   splashOverlay.classList.add('hidden');
+  stage.style.visibility = '';
 }
 
 function updateBackBtn() {
@@ -326,9 +454,23 @@ function updateBackBtn() {
   }
 }
 
+const SAVE_KEY = 'tuesday_page';
+
+const savedPage = localStorage.getItem(SAVE_KEY);
+if (savedPage && story.pages[savedPage]) btnContinue.style.display = '';
+
 document.getElementById('btn-start').addEventListener('click', () => {
+  localStorage.removeItem(SAVE_KEY);
+  btnContinue.style.display = 'none';
   hideSplash();
+  if (musicOn) bgMusic.play();
   renderPage('spread_01', false);
+});
+
+btnContinue.addEventListener('click', () => {
+  hideSplash();
+  if (musicOn) bgMusic.play();
+  renderPage(localStorage.getItem(SAVE_KEY), false);
 });
 
 // ── Page rendering ────────────────────────────────────────────
@@ -341,6 +483,7 @@ function renderPage(pageId, pushHistory = true) {
   if (pageId === 'splash') {
     if (pushHistory && currentPage) pageHistory.push(currentPage);
     currentPage = 'splash';
+    spreadIdDisplay.textContent = '';
     textLayer.innerHTML = '';
     hotspots.innerHTML = '';
     stage.querySelectorAll('.wdyd-img, .overlay').forEach(el => el.remove());
@@ -351,36 +494,53 @@ function renderPage(pageId, pushHistory = true) {
 
   hideSplash();
 
+  const isFirstLoad = !currentPage || currentPage === 'splash';
+
   if (pushHistory && currentPage) pageHistory.push(currentPage);
   currentPage = pageId;
+  spreadIdDisplay.textContent = pageId;
+  localStorage.setItem(SAVE_KEY, pageId);
   updateBackBtn();
 
   const page = story.pages[pageId];
   if (!page) return;
 
-  textLayer.innerHTML = '';
-  hotspots.innerHTML = '';
-  stage.querySelectorAll('.wdyd-img, .overlay').forEach(el => el.remove());
-  if (typeTimer) clearInterval(typeTimer);
+  const load = () => {
+    textLayer.innerHTML = '';
+    hotspots.innerHTML = '';
+    stage.querySelectorAll('.wdyd-img, .overlay').forEach(el => el.remove());
+    if (typeTimer) clearInterval(typeTimer);
 
-  pageOverlays = page.overlays || [];
+    pageOverlays = page.overlays || [];
 
-  const begin = () => typeBubbles(page.bubbles, 0, () => {
-    if (page.wdyd) {
-      setTimeout(() => showWdyd(page.wdyd, () => showChoices(page.choices)), page.wdyd.delay || 0);
-    } else {
-      showChoices(page.choices);
-    }
-  });
+    const begin = () => typeBubbles(page.bubbles, 0, () => {
+      if (page.wdyd) {
+        setTimeout(() => showWdyd(page.wdyd, () => showChoices(page.choices)), page.wdyd.delay || 0);
+      } else {
+        showChoices(page.choices);
+      }
+    });
 
-  spread.src = page.image;
-  requestAnimationFrame(() => {
-    if (spread.naturalWidth > 0) {
-      begin();
-    } else {
-      spread.onload = () => { spread.onload = null; begin(); };
-    }
-  });
+    spread.src = page.image;
+    requestAnimationFrame(() => {
+      const onLoaded = () => {
+        stage.style.opacity = '1';
+        setTimeout(begin, FADE_MS + POST_FADE_MS);
+      };
+      if (spread.naturalWidth > 0) {
+        onLoaded();
+      } else {
+        spread.onload = () => { spread.onload = null; onLoaded(); };
+      }
+    });
+  };
+
+  stage.style.opacity = '0';
+  if (isFirstLoad) {
+    load();
+  } else {
+    setTimeout(load, FADE_MS);
+  }
 }
 
 function typeBubbles(bubbles, index, onDone) {
@@ -455,6 +615,37 @@ function showChoices(choices) {
         transform: `rotate(${choice.rotation || '0deg'})`
       });
 
+      let overlay = null;
+      if (choice.src) {
+        const srcA = choice.src;
+        const srcB = choice.src.replace(/a\.png$/i, 'b.png');
+        overlay = document.createElement('img');
+        overlay.src = srcA;
+        overlay.className = 'overlay choice-overlay';
+        stage.insertBefore(overlay, hotspots);
+
+        const cx = (parseFloat(choice.left) + parseFloat(choice.width)  / 2).toFixed(1) + '%';
+        const cy = (parseFloat(choice.top)  + parseFloat(choice.height) / 2).toFixed(1) + '%';
+        let hoverTimer = null;
+        let hoverState = 0;
+
+        btn.addEventListener('mouseenter', () => {
+          overlay.style.transformOrigin = `${cx} ${cy}`;
+          overlay.style.scale = '1.1';
+          hoverTimer = setInterval(() => {
+            hoverState = 1 - hoverState;
+            overlay.src = hoverState === 0 ? srcA : srcB;
+          }, 200);
+        });
+        btn.addEventListener('mouseleave', () => {
+          overlay.style.scale = '';
+          overlay.src = srcA;
+          hoverState = 0;
+          clearInterval(hoverTimer);
+          hoverTimer = null;
+        });
+      }
+
       const label = document.createElement('span');
       label.className = 'choice-label';
       label.textContent = choice.label;
@@ -462,23 +653,12 @@ function showChoices(choices) {
 
       btn.addEventListener('click', () => renderPage(choice.next, true));
 
-      const cx = (parseFloat(choice.left) + parseFloat(choice.width) / 2).toFixed(1) + '%';
-      const cy = (parseFloat(choice.top)  + parseFloat(choice.height) / 2).toFixed(1) + '%';
-      // btn.addEventListener('mouseenter', () => {
-      //   stage.querySelectorAll('.overlay.option-art').forEach(ov => {
-      //     ov.style.transformOrigin = `${cx} ${cy}`;
-      //     ov.style.scale = '1.1';
-      //   });
-      // });
-      // btn.addEventListener('mouseleave', () => {
-      //   stage.querySelectorAll('.overlay.option-art').forEach(ov => {
-      //     ov.style.scale = '';
-      //   });
-      // });
-
       hotspots.appendChild(btn);
 
-      setTimeout(() => { btn.style.opacity = '1'; }, i * 150);
+      setTimeout(() => {
+        btn.style.opacity = '1';
+        if (choice.src) overlay.style.opacity = '1';
+      }, i * 150);
     });
 
     fireOverlays('after-choices');

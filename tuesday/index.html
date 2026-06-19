@@ -8,8 +8,8 @@
 <body>
   <div id="stage">
     <img id="spread" alt="">
-    <div id="text-layer"></div>
     <div id="hotspots"></div>
+    <div id="text-layer"></div>
   </div>
   <nav id="nav-ui">
     <div id="nav-left">
@@ -27,26 +27,55 @@
 
   <div id="splash-overlay">
     <h1 id="splash-title">a tuesday</h1>
-    <button id="btn-start">Start</button>
+    <div id="splash-buttons">
+      <button id="btn-start" class="splash-btn">
+        <img src="_images/Splash_StartBubble-a.png" alt="">
+        <span class="splash-btn-label">start</span>
+      </button>
+      <button id="btn-continue" class="splash-btn" style="display:none">
+        <img src="_images/Splash_ContBubble-a.png" alt="">
+        <span class="splash-btn-label">resume</span>
+      </button>
+    </div>
   </div>
 
   <div id="menu-overlay">
+    <button id="btn-close-menu" class="nav-btn" aria-label="Close menu">
+      <img src="_images/Global-Close1.png" alt="">
+    </button>
     <div id="menu-card">
-      <img src="_images/Menu-scrap.png" id="menu-scrap-bg">
+      <img src="_images/Menu-Error-receipt.png" id="menu-scrap-bg">
       <div id="menu-items">
-        <button id="btn-about-project" class="nav-btn menu-item-btn" aria-label="About the project">
-          <img src="_images/Menu-AboutProject1.png" alt="">
-        </button>
-        <button id="btn-about-ann" class="nav-btn menu-item-btn" aria-label="About Ann">
-          <img src="_images/Menu-AboutAnn1.png" alt="">
-        </button>
+        <h2 id="menu-main-title">menu</h2>
+        <h2 id="menu-title" class="menu-section-title">control</h2>
+        <div id="menu-toggles">
+          <button class="menu-toggle-btn" id="btn-music">
+            <img src="_images/Menu-Music-On1.png" alt="music">
+            <span class="menu-toggle-label">music</span>
+          </button>
+          <button class="menu-toggle-btn" id="btn-sfx">
+            <img src="_images/Menu-SFX-On1.png" alt="sfx">
+            <span class="menu-toggle-label">sfx</span>
+          </button>
+          <button class="menu-toggle-btn" id="btn-restart">
+            <img src="_images/Menu-Restart1.png" alt="restart">
+            <span class="menu-toggle-label">restart</span>
+          </button>
+        </div>
+        <h2 class="menu-section-title">about</h2>
+        <p id="about-text">"A Tuesday" is the result of an intense fascination with the "choose your own" concept and how it shows up in different mediums; specifically video games, comics, and novels. So after I tumbled down the rabbit hole that is the structure of Edward Packard's classic "Choose your own adventure" novels, getting stuck in the loop of George Wylesol's 2120, and playing one too many visual novel pc games... I created the most mundane click thru comic (that also started out as a zine). Phew ok hope u enjoyed :-)</p>
+        <div id="special-thanks-block">
+          <h2 class="menu-section-title" id="special-thanks-title">special thanks</h2>
+          <img id="sax-img" src="_images/Menu-Sax1.png" alt="">
+          <p id="thanks-text">special thanks to danny meyer for the theme song and sfx help :-)</p>
+        </div>
       </div>
     </div>
   </div>
 
   <div id="small-screen-overlay">
     <div id="small-screen-message">
-      <img src="_images/Error-receipt.png" id="small-screen-bg">
+      <img src="_images/Menu-Error-receipt.png" id="small-screen-bg">
       <div id="small-screen-content">
         <h2 id="small-screen-header"></h2>
         <p id="small-screen-text"></p>
@@ -55,10 +84,12 @@
   </div>
 
   <div id="coord-ui">
+    <div id="spread-id"></div>
     <div id="spread-width"></div>
     <div id="coords"></div>
     <button id="coord-toggle">📍 coords: on</button>
   </div>
+  <audio id="bg-music" loop src="_audio/ann_zine_w_saxophone.mp3"></audio>
   <script src="story.js"></script>
   <script src="engine.js"></script>
 </body>
