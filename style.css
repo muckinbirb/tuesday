@@ -573,6 +573,77 @@ body {
   color: #1a1a1a;
 }
 
+/* ── Password overlay ────────────────────────────────────────── */
+#password-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: #f4ead8;
+  background-image: url('images/Background.webp');
+  background-size: cover;
+  background-attachment: fixed;
+  background-blend-mode: multiply;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  z-index: 200;
+  transition: opacity 0.4s ease;
+}
+
+#password-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#password-label {
+  font-family: 'Akzidenz Grotesk', 'AkzidenzGrotesk', Arial, sans-serif;
+  font-size: 10pt;
+  font-weight: normal;
+  color: #1a1a1a;
+  letter-spacing: -0.06em;
+  margin: 0;
+}
+
+#password-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#password-input {
+  width: 180px;
+  border: 1px solid #1a1a1a;
+  background: transparent;
+  padding: 0.3rem 0.4rem;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 10pt;
+  color: #1a1a1a;
+  outline: none;
+}
+
+#password-submit {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 10pt;
+  color: #1a1a1a;
+  padding: 0;
+  letter-spacing: -0.01em;
+}
+
+#password-submit:hover { text-decoration: underline; }
+
+@keyframes password-shake {
+  0%, 100% { transform: translateX(0); }
+  25%       { transform: translateX(-6px); }
+  75%       { transform: translateX(6px); }
+}
+
+#password-input.shake { animation: password-shake 0.3s ease; }
+
 /* ── Coordinate helper ───────────────────────────────────────── */
 #coord-ui {
   position: fixed;

@@ -89,8 +89,51 @@
     <div id="coords"></div>
     <button id="coord-toggle">📍 coords: on</button>
   </div>
+  <div id="password-overlay">
+    <p id="password-label">password</p>
+    <div id="password-row">
+      <input type="password" id="password-input" autocomplete="off" spellcheck="false">
+      <button id="password-submit">submit</button>
+    </div>
+  </div>
+
   <audio id="bg-music" loop src="audio/ann_zine_w_saxophone.mp3"></audio>
   <script src="story.js"></script>
   <script src="engine.js"></script>
+  <script>
+    (function () {
+      const PASSWORD = 'tuesdaygame';
+      const SESSION_KEY = 'tuesday_auth';
+      const overlay = document.getElementById('password-overlay');
+      const input = document.getElementById('password-input');
+      const submit = document.getElementById('password-submit');
+
+      function unlock() {
+        sessionStorage.setItem(SESSION_KEY, '1');
+        overlay.classList.add('hidden');
+        setTimeout(() => overlay.remove(), 400);
+      }
+
+      function attempt() {
+        if (input.value === PASSWORD) {
+          unlock();
+        } else {
+          input.value = '';
+          input.classList.remove('shake');
+          void input.offsetWidth;
+          input.classList.add('shake');
+          input.addEventListener('animationend', () => input.classList.remove('shake'), { once: true });
+        }
+      }
+
+      if (sessionStorage.getItem(SESSION_KEY)) {
+        overlay.remove();
+      } else {
+        input.focus();
+        input.addEventListener('keydown', e => { if (e.key === 'Enter') attempt(); });
+        submit.addEventListener('click', attempt);
+      }
+    })();
+  </script>
 </body>
 </html>
