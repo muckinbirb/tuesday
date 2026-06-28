@@ -467,7 +467,7 @@ document.getElementById('btn-start').addEventListener('click', () => {
   btnContinue.style.display = 'none';
   hideSplash();
   if (musicOn) bgMusic.play();
-  renderPage('spread_15', false);
+  renderPage('spread_01', false);
 });
 
 btnContinue.addEventListener('click', () => {

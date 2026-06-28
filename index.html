@@ -90,10 +90,12 @@
     <button id="coord-toggle">📍 coords: on</button>
   </div>
   <div id="password-overlay">
-    <p id="password-label">password</p>
-    <div id="password-row">
-      <input type="password" id="password-input" autocomplete="off" spellcheck="false">
-      <button id="password-submit">submit</button>
+    <div id="password-box">
+      <p id="password-label">password</p>
+      <div id="password-field">
+        <input type="password" id="password-input" autocomplete="off" spellcheck="false">
+        <button id="password-submit">go</button>
+      </div>
     </div>
   </div>
 
@@ -119,10 +121,11 @@
           unlock();
         } else {
           input.value = '';
-          input.classList.remove('shake');
-          void input.offsetWidth;
-          input.classList.add('shake');
-          input.addEventListener('animationend', () => input.classList.remove('shake'), { once: true });
+          const field = document.getElementById('password-field');
+          field.classList.remove('shake');
+          void field.offsetWidth;
+          field.classList.add('shake');
+          field.addEventListener('animationend', () => field.classList.remove('shake'), { once: true });
         }
       }
 

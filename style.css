@@ -583,10 +583,8 @@ body {
   background-attachment: fixed;
   background-blend-mode: multiply;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
   z-index: 200;
   transition: opacity 0.4s ease;
 }
@@ -596,27 +594,37 @@ body {
   pointer-events: none;
 }
 
+#password-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
 #password-label {
   font-family: 'Akzidenz Grotesk', 'AkzidenzGrotesk', Arial, sans-serif;
-  font-size: 10pt;
+  font-size: 14pt;
   font-weight: normal;
   color: #1a1a1a;
   letter-spacing: -0.06em;
   margin: 0;
 }
 
-#password-row {
+#password-field {
   display: flex;
-  flex-direction: row;
   align-items: center;
-  gap: 0.5rem;
+  width: 200px;
+  border: 2px solid #1a1a1a;
+  border-radius: 8px;
+  background: transparent;
+  padding: 0.5rem 0.5rem 0.5rem 0.6rem;
 }
 
 #password-input {
-  width: 180px;
-  border: 1px solid #1a1a1a;
+  flex: 1;
+  min-width: 0;
+  border: none;
   background: transparent;
-  padding: 0.3rem 0.4rem;
   font-family: 'Times New Roman', Times, serif;
   font-size: 10pt;
   color: #1a1a1a;
@@ -624,17 +632,21 @@ body {
 }
 
 #password-submit {
+  flex-shrink: 0;
   background: none;
   border: none;
   cursor: pointer;
-  font-family: 'Times New Roman', Times, serif;
-  font-size: 10pt;
+  font-family: 'Akzidenz Grotesk', 'AkzidenzGrotesk', Arial, sans-serif;
+  font-size: 12pt;
+  font-weight: normal;
   color: #1a1a1a;
+  letter-spacing: -0.06em;
   padding: 0;
-  letter-spacing: -0.01em;
+  margin-left: 0.4rem;
+  line-height: 1;
 }
 
-#password-submit:hover { text-decoration: underline; }
+#password-submit:hover { opacity: 0.6; }
 
 @keyframes password-shake {
   0%, 100% { transform: translateX(0); }
@@ -642,7 +654,7 @@ body {
   75%       { transform: translateX(6px); }
 }
 
-#password-input.shake { animation: password-shake 0.3s ease; }
+#password-field.shake { animation: password-shake 0.3s ease; }
 
 /* ── Coordinate helper ───────────────────────────────────────── */
 #coord-ui {
