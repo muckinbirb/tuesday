@@ -67,9 +67,9 @@ function addHoverAnim(btn, src1, src2) {
   });
 }
 
-addHoverAnim(document.getElementById('btn-back'), '_images/Global-Back1.png',     '_images/Global-Back2.png');
-addHoverAnim(document.getElementById('btn-die'),  '_images/Global-ColorDie1.png', '_images/Global-ColorDie2.png');
-addHoverAnim(document.getElementById('btn-menu'), '_images/Global-Menu1.png',     '_images/Global-Menu2.png');
+addHoverAnim(document.getElementById('btn-back'), 'images/Global-Back1.png',     'images/Global-Back2.png');
+addHoverAnim(document.getElementById('btn-die'),  'images/Global-ColorDie1.png', 'images/Global-ColorDie2.png');
+addHoverAnim(document.getElementById('btn-menu'), 'images/Global-Menu1.png',     'images/Global-Menu2.png');
 
 let dieRollCount = 0;
 document.getElementById('btn-die').addEventListener('click', () => {
@@ -106,8 +106,8 @@ function addBubbleHover(btn, srcA, srcB) {
   });
 }
 
-addBubbleHover(document.getElementById('btn-start'), '_images/Splash_StartBubble-a.png', '_images/Splash_StartBubble-b.png');
-addBubbleHover(btnContinue,                          '_images/Splash_ContBubble-a.png',  '_images/Splash_ContBubble-b.png');
+addBubbleHover(document.getElementById('btn-start'), 'images/Splash_StartBubble-a.png', 'images/Splash_StartBubble-b.png');
+addBubbleHover(btnContinue,                          'images/Splash_ContBubble-a.png',  'images/Splash_ContBubble-b.png');
 
 const bgMusic = document.getElementById('bg-music');
 
@@ -137,33 +137,34 @@ function addToggleHover(btn, src1on, src2on, src1off, src2off, getState) {
 }
 
 addToggleHover(btnMusic,
-  '_images/Menu-Music-On1.png', '_images/Menu-Music-On2.png',
-  '_images/Menu-Music-Off1.png', '_images/Menu-Music-Off2.png',
+  'images/Menu-Music-On1.png', 'images/Menu-Music-On2.png',
+  'images/Menu-Music-Off1.png', 'images/Menu-Music-Off2.png',
   () => musicOn
 );
 
 addToggleHover(btnSfx,
-  '_images/Menu-SFX-On1.png', '_images/Menu-SFX-On2.png',
-  '_images/Menu-SFX-Off1.png', '_images/Menu-SFX-Off2.png',
+  'images/Menu-SFX-On1.png', 'images/Menu-SFX-On2.png',
+  'images/Menu-SFX-Off1.png', 'images/Menu-SFX-Off2.png',
   () => sfxOn
 );
 
-addHoverAnim(btnRestart, '_images/Menu-Restart1.png', '_images/Menu-Restart2.png');
+addHoverAnim(btnRestart, 'images/Menu-Restart1.png', 'images/Menu-Restart2.png');
 
 btnMusic.addEventListener('click', () => {
   musicOn = !musicOn;
-  btnMusic.querySelector('img').src = musicOn ? '_images/Menu-Music-On1.png' : '_images/Menu-Music-Off1.png';
+  btnMusic.querySelector('img').src = musicOn ? 'images/Menu-Music-On1.png' : 'images/Menu-Music-Off1.png';
   if (musicOn) bgMusic.play(); else bgMusic.pause();
 });
 
 btnSfx.addEventListener('click', () => {
   sfxOn = !sfxOn;
-  btnSfx.querySelector('img').src = sfxOn ? '_images/Menu-SFX-On1.png' : '_images/Menu-SFX-Off1.png';
+  btnSfx.querySelector('img').src = sfxOn ? 'images/Menu-SFX-On1.png' : 'images/Menu-SFX-Off1.png';
 });
 
 btnRestart.addEventListener('click', () => {
   closeMenu();
   pageHistory.length = 0;
+  document.body.style.backgroundColor = '';
   renderPage('splash', false);
 });
 
@@ -173,7 +174,7 @@ const menuOverlay   = document.getElementById('menu-overlay');
 const btnMenu       = document.getElementById('btn-menu');
 const btnCloseMenu  = document.getElementById('btn-close-menu');
 
-addHoverAnim(btnCloseMenu, '_images/Global-Close1.png', '_images/Global-Close2.png');
+addHoverAnim(btnCloseMenu, 'images/Global-Close1.png', 'images/Global-Close2.png');
 btnCloseMenu.addEventListener('click', closeMenu);
 
 const saxImg             = document.getElementById('sax-img');
@@ -185,7 +186,7 @@ specialThanksBlock.addEventListener('mouseenter', () => {
   saxFrame = 0;
   saxTimer = setInterval(() => {
     saxFrame = 1 - saxFrame;
-    saxImg.src = saxFrame === 0 ? '_images/Menu-Sax1.png' : '_images/Menu-Sax2.png';
+    saxImg.src = saxFrame === 0 ? 'images/Menu-Sax1.png' : 'images/Menu-Sax2.png';
   }, 200);
 });
 
@@ -193,25 +194,24 @@ specialThanksBlock.addEventListener('mouseleave', () => {
   clearInterval(saxTimer);
   saxTimer = null;
   saxImg.style.display = 'none';
-  saxImg.src = '_images/Menu-Sax1.png';
+  saxImg.src = 'images/Menu-Sax1.png';
 });
 
 const btnDie = document.getElementById('btn-die');
+const navUi  = document.getElementById('nav-ui');
 
 function openMenu() {
   menuOverlay.classList.add('visible');
   stage.classList.add('blurred');
   splashOverlay.classList.add('blurred');
-  btnDie.classList.add('blurred');
-  btnMenu.style.visibility = 'hidden';
+  navUi.style.visibility = 'hidden';
 }
 
 function closeMenu() {
   menuOverlay.classList.remove('visible');
   stage.classList.remove('blurred');
   splashOverlay.classList.remove('blurred');
-  btnDie.classList.remove('blurred');
-  btnMenu.style.visibility = '';
+  navUi.style.visibility = '';
 }
 
 btnMenu.addEventListener('click', () => {
@@ -261,6 +261,9 @@ spread.addEventListener('mouseleave', () => {
 
 function setCoords(on) {
   coordsOn = on;
+  const ui = document.getElementById('coord-ui');
+  ui.style.opacity = on ? '1' : '0';
+  ui.style.pointerEvents = on ? 'auto' : 'none';
   coords.style.display = on ? 'block' : 'none';
   coordToggle.textContent = `📍 coords: ${on ? 'on' : 'off'}`;
   if (!on) {
@@ -281,7 +284,7 @@ spread.addEventListener('click', e => {
   navigator.clipboard.writeText(text);
 });
 
-setCoords(true);
+setCoords(false);
 
 const FADE_MS      = 350;
 const POST_FADE_MS = 500;
@@ -464,7 +467,7 @@ document.getElementById('btn-start').addEventListener('click', () => {
   btnContinue.style.display = 'none';
   hideSplash();
   if (musicOn) bgMusic.play();
-  renderPage('spread_01', false);
+  renderPage('spread_15', false);
 });
 
 btnContinue.addEventListener('click', () => {

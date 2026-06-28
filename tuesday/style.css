@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'Akzidenz Grotesk';
-  src: url('_fonts/Berthold Akzidenz Grotesk BE Bold Extended.otf') format('opentype');
+  src: url('fonts/Berthold Akzidenz Grotesk BE Bold Extended.otf') format('opentype');
   font-weight: normal;
 }
 
@@ -8,7 +8,7 @@
 
 body {
   background-color: #f4ead8;
-  background-image: url('_images/Background.webp');
+  background-image: url('images/Background.webp');
   background-size: cover;
   background-attachment: fixed;
   background-blend-mode: multiply;
@@ -583,6 +583,8 @@ body {
   gap: 0.4rem;
   font-family: monospace;
   font-size: 13px;
+  opacity: 0;
+  pointer-events: none;
 }
 
 #spread-width {
