@@ -2,7 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="description" content="A Tuesday: a mundane choose-your-own-path webcomic about one ordinary day.">
   <title>Choose Your Own Day</title>
+  <link rel="icon" href="images/favicon/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="images/favicon/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="images/favicon/apple-touch-icon.png">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -44,21 +49,21 @@
       <img src="images/Global-Close1.png" alt="">
     </button>
     <div id="menu-card">
-      <img src="images/Menu-Error-receipt.png" id="menu-scrap-bg">
+      <img src="images/Menu-Error-receipt.png" id="menu-scrap-bg" alt="">
       <div id="menu-items">
         <h2 id="menu-main-title">menu</h2>
         <h2 id="menu-title" class="menu-section-title">control</h2>
         <div id="menu-toggles">
-          <button class="menu-toggle-btn" id="btn-music">
-            <img src="images/Menu-Music-On1.png" alt="music">
+          <button class="menu-toggle-btn" id="btn-music" aria-pressed="true">
+            <img src="images/Menu-Music-On1.png" alt="">
             <span class="menu-toggle-label">music</span>
           </button>
-          <button class="menu-toggle-btn" id="btn-sfx">
-            <img src="images/Menu-SFX-On1.png" alt="sfx">
+          <button class="menu-toggle-btn" id="btn-sfx" aria-pressed="true">
+            <img src="images/Menu-SFX-On1.png" alt="">
             <span class="menu-toggle-label">sfx</span>
           </button>
           <button class="menu-toggle-btn" id="btn-restart">
-            <img src="images/Menu-Restart1.png" alt="restart">
+            <img src="images/Menu-Restart1.png" alt="">
             <span class="menu-toggle-label">restart</span>
           </button>
         </div>
@@ -75,7 +80,7 @@
 
   <div id="small-screen-overlay">
     <div id="small-screen-message">
-      <img src="images/Menu-Error-receipt.png" id="small-screen-bg">
+      <img src="images/Menu-Error-receipt.png" id="small-screen-bg" alt="">
       <div id="small-screen-content">
         <h2 id="small-screen-header"></h2>
         <p id="small-screen-text"></p>
@@ -91,10 +96,10 @@
   </div>
   <div id="password-overlay">
     <div id="password-box">
-      <p id="password-label">password</p>
+      <label id="password-label" for="password-input">password</label>
       <div id="password-field">
         <input type="password" id="password-input" autocomplete="off" spellcheck="false">
-        <button id="password-submit">go</button>
+        <button id="password-submit" type="button">go</button>
       </div>
     </div>
   </div>

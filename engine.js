@@ -111,6 +111,13 @@ addBubbleHover(btnContinue,                          'images/Splash_ContBubble-a
 
 const bgMusic = document.getElementById('bg-music');
 
+// play() returns a promise that rejects if the file is missing or autoplay is
+// blocked; swallow that so it doesn't surface as an uncaught error.
+function playMusic() {
+  const p = bgMusic.play();
+  if (p && p.catch) p.catch(() => {});
+}
+
 let musicOn = true;
 let sfxOn   = true;
 
@@ -153,12 +160,14 @@ addHoverAnim(btnRestart, 'images/Menu-Restart1.png', 'images/Menu-Restart2.png')
 btnMusic.addEventListener('click', () => {
   musicOn = !musicOn;
   btnMusic.querySelector('img').src = musicOn ? 'images/Menu-Music-On1.png' : 'images/Menu-Music-Off1.png';
-  if (musicOn) bgMusic.play(); else bgMusic.pause();
+  btnMusic.setAttribute('aria-pressed', String(musicOn));
+  if (musicOn) playMusic(); else bgMusic.pause();
 });
 
 btnSfx.addEventListener('click', () => {
   sfxOn = !sfxOn;
   btnSfx.querySelector('img').src = sfxOn ? 'images/Menu-SFX-On1.png' : 'images/Menu-SFX-Off1.png';
+  btnSfx.setAttribute('aria-pressed', String(sfxOn));
 });
 
 btnRestart.addEventListener('click', () => {
@@ -220,6 +229,10 @@ btnMenu.addEventListener('click', () => {
 
 menuOverlay.addEventListener('click', e => {
   if (e.target === menuOverlay) closeMenu();
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && menuOverlay.classList.contains('visible')) closeMenu();
 });
 
 new ResizeObserver(() => {
@@ -296,6 +309,7 @@ const pageHistory = [];
 
 function triggerOverlay(ov) {
   const img = document.createElement('img');
+  img.alt = '';
   img.className = `overlay ${ov.jitter || ''}`.trim();
   img.src = ov.src;
   stage.insertBefore(img, hotspots);
@@ -466,13 +480,13 @@ document.getElementById('btn-start').addEventListener('click', () => {
   localStorage.removeItem(SAVE_KEY);
   btnContinue.style.display = 'none';
   hideSplash();
-  if (musicOn) bgMusic.play();
+  if (musicOn) playMusic();
   renderPage('spread_01', false);
 });
 
 btnContinue.addEventListener('click', () => {
   hideSplash();
-  if (musicOn) bgMusic.play();
+  if (musicOn) playMusic();
   renderPage(localStorage.getItem(SAVE_KEY), false);
 });
 
@@ -491,6 +505,7 @@ function renderPage(pageId, pushHistory = true) {
     hotspots.innerHTML = '';
     stage.querySelectorAll('.wdyd-img, .overlay').forEach(el => el.remove());
     if (typeTimer) clearInterval(typeTimer);
+    if (overlayShown) hideSmallScreenOverlay();
     showSplash();
     return;
   }
@@ -590,6 +605,7 @@ function typeBubbles(bubbles, index, onDone) {
 
 function showWdyd(wdyd, onDone) {
   const img = document.createElement('img');
+  img.alt = '';
   img.className = 'wdyd-img';
   img.src = wdyd.src;
   Object.assign(img.style, { left: wdyd.left, top: wdyd.top, width: wdyd.width });
@@ -624,6 +640,7 @@ function showChoices(choices) {
         const srcB = choice.src.replace(/a\.png$/i, 'b.png');
         overlay = document.createElement('img');
         overlay.src = srcA;
+        overlay.alt = '';
         overlay.className = 'overlay choice-overlay';
         stage.insertBefore(overlay, hotspots);
 
